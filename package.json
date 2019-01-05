@@ -9,11 +9,13 @@
     "react-scripts": "2.1.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "launch-react": "set BROWSER=none&& react-scripts start",
+    "launch-electron-dev": "wait-on http://localhost:3000 && npm run electron-dev",
+    "start": "concurrently npm:launch-*",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "electron-dev": "set ELECTRON_START_URL=http://localhost:3000 && electron ."
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -25,6 +27,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "electron": "^4.0.1"
+    "concurrently": "^4.1.0",
+    "electron": "^4.0.1",
+    "wait-on": "^3.2.0"
   }
 }
