@@ -1,16 +1,80 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Stage, Layer, Image } from 'react-konva'
 
-const ImageViewer = ({imagePath}) => {
-	console.log('Opening image: ' + imagePath)
+class ImageViewer extends Component {
+	static propTypes = {
+		imagePath: PropTypes.string.isRequired,
+	}
 
-	return (
-		<img src={imagePath} alt="selected scan" />
-	)
-}
+	state = {
+		image: null,
+		stageWidth: 500,
+		stageHeight: 500,
+		stageScale: 1,
+	}
 
-ImageViewer.propTypes = {
-	imagePath: PropTypes.string.isRequired,
+	constructor(props) {
+		super(props)
+		this.container = null
+	}
+
+	handleResize = () => {
+		const stageWidth = this.container.offsetWidth
+		const stageHeight = this.container.offsetHeight
+		this.setState({ stageWidth, stageHeight })
+	}
+
+	handleWheel = e => {
+		e.evt.preventDefault()
+
+		const scaleBy = 1.3
+		const stage = e.target.getStage()
+		const oldScale = stage.scaleX()
+
+		const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy
+
+		this.setState({stageScale: newScale})
+	}
+
+	componentDidMount() {
+		this.handleResize()
+		const image = new window.Image()
+		image.src = this.props.imagePath
+		image.onload = () => {
+			this.setState({ image })
+		}
+
+		window.addEventListener('resize', this.handleResize)
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.handleResize)
+	}
+
+	render() {
+		return (
+			<div
+				style={{ width: '100%', height: '100%' }}
+				ref={node => { this.container = node }}
+			>
+				<Stage
+					width={this.state.stageWidth}
+					height={this.state.stageHeight}
+					draggable
+					onWheel={this.handleWheel}
+					scaleX={this.state.stageScale}
+					scaleY={this.state.stageScale}
+				>
+					<Layer>
+						<Image
+							image={this.state.image}
+						/>
+					</Layer>
+				</Stage>
+			</div>
+		)
+	}
 }
 
 export default ImageViewer

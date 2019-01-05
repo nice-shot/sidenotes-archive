@@ -4,9 +4,11 @@
   "private": true,
   "main": "src/start_electron.js",
   "dependencies": {
+    "konva": "^2.6.0",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-konva": "^16.7.1",
     "react-scripts": "2.1.3"
   },
   "scripts": {
