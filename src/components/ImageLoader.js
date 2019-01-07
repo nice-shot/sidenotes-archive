@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Image } from 'react-konva'
 
 class ImageLoader extends Component {
+	// TODO: Get image path from redux
 	static propTypes = {
 		imagePath: PropTypes.string,
 	}
@@ -17,18 +18,27 @@ class ImageLoader extends Component {
 		this.image = new window.Image()
 		this.image.src = this.props.imagePath
 		this.image.onload = () => {
+			// Fit image to stage
 			const stage = this.imageNode.getStage()
 			const { width, height } = this.imageNode.size()
+			const { width: sWidth, height: sHeight } = stage.size()
 
 			let scale
+			const position = { x: 0, y: 0 }
 			if (width > height) {
-				scale = stage.width() / width
+				scale = sWidth / width
+				// Center vertically
+				position.y = (sHeight / 2) - (height * scale / 2)
 			} else {
-				scale = stage.height() / height
+				// Center horizontally
+				scale = sHeight / height
+				position.x = (sWidth / 2) - (width * scale / 2)
 			}
 
-			console.log(`Scaling by ${scale}`)
 			this.imageNode.scale({x: scale, y: scale})
+			this.imageNode.position(position)
+
+			// Render image
 			this.imageNode.getLayer().batchDraw()
 		}
 	}
