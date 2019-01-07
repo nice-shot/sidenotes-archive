@@ -11,7 +11,7 @@ class ImageViewer extends Component {
 		image: null,
 		stageWidth: 500,
 		stageHeight: 500,
-		stageScale: 1,
+		// stageScale: 1,
 	}
 
 	constructor(props) {
@@ -31,10 +31,26 @@ class ImageViewer extends Component {
 		const scaleBy = 1.3
 		const stage = e.target.getStage()
 		const oldScale = stage.scaleX()
+		let pointerPos = stage.getPointerPosition()
+
+		const mousePointTo = {
+			x: pointerPos.x / oldScale - stage.x() / oldScale,
+			y: pointerPos.y / oldScale - stage.y() / oldScale
+		}
 
 		const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy
+		stage.scale({x: newScale, y: newScale})
+		pointerPos = stage.getPointerPosition()
 
-		this.setState({stageScale: newScale})
+		const newPos = {
+			x: -(mousePointTo.x - pointerPos.x / newScale) * newScale,
+			y: -(mousePointTo.y - pointerPos.y / newScale) * newScale
+		}
+
+		stage.position(newPos)
+		stage.batchDraw()
+
+		// this.setState({stageScale: newScale})
 	}
 
 	componentDidMount() {
@@ -63,8 +79,8 @@ class ImageViewer extends Component {
 					height={this.state.stageHeight}
 					draggable
 					onWheel={this.handleWheel}
-					scaleX={this.state.stageScale}
-					scaleY={this.state.stageScale}
+					// scaleX={this.state.stageScale}
+					// scaleY={this.state.stageScale}
 				>
 					<Layer>
 						<Image
