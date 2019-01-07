@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Stage, Layer, Image } from 'react-konva'
+import { Stage, Layer } from 'react-konva'
+
+import ImageLoader from './ImageLoader'
 
 import '../style/viewer.css'
+
 
 class ImageViewer extends Component {
 	static propTypes = {
@@ -10,7 +13,6 @@ class ImageViewer extends Component {
 	}
 
 	state = {
-		image: null,
 		stageWidth: 500,
 		stageHeight: 500,
 	}
@@ -59,11 +61,6 @@ class ImageViewer extends Component {
 
 	componentDidMount() {
 		this.handleResize()
-		const image = new window.Image()
-		image.src = this.props.imagePath
-		image.onload = () => {
-			this.setState({ image })
-		}
 
 		window.addEventListener('resize', this.handleResize)
 	}
@@ -85,9 +82,7 @@ class ImageViewer extends Component {
 					onWheel={this.handleWheel}
 				>
 					<Layer>
-						<Image
-							image={this.state.image}
-						/>
+						<ImageLoader imagePath={this.props.imagePath} />
 					</Layer>
 				</Stage>
 			</div>
