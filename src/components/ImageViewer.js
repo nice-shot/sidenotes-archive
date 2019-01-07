@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Konva from 'konva'
 import { Stage, Layer, Image } from 'react-konva'
+
+import '../style/viewer.css'
 
 class ImageViewer extends Component {
 	static propTypes = {
@@ -74,7 +75,7 @@ class ImageViewer extends Component {
 	render() {
 		return (
 			<div
-				style={{ width: '100%', height: '100%' }}
+				className="view-container"
 				ref={node => { this.container = node }}
 			>
 				<Stage
