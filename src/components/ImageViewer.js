@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Konva from 'konva'
 import { Stage, Layer, Image } from 'react-konva'
 
 class ImageViewer extends Component {
@@ -11,7 +12,6 @@ class ImageViewer extends Component {
 		image: null,
 		stageWidth: 500,
 		stageHeight: 500,
-		// stageScale: 1,
 	}
 
 	constructor(props) {
@@ -28,7 +28,12 @@ class ImageViewer extends Component {
 	handleWheel = e => {
 		e.evt.preventDefault()
 
-		const scaleBy = 1.3
+		let scaleBy = 1.3
+		// Zoom out if scroll was down
+		if (e.evt.deltaY < 0) {
+			scaleBy = 1 / scaleBy
+		}
+
 		const stage = e.target.getStage()
 		const oldScale = stage.scaleX()
 		let pointerPos = stage.getPointerPosition()
@@ -38,7 +43,7 @@ class ImageViewer extends Component {
 			y: pointerPos.y / oldScale - stage.y() / oldScale
 		}
 
-		const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy
+		const newScale = oldScale * scaleBy
 		stage.scale({x: newScale, y: newScale})
 		pointerPos = stage.getPointerPosition()
 
@@ -49,8 +54,6 @@ class ImageViewer extends Component {
 
 		stage.position(newPos)
 		stage.batchDraw()
-
-		// this.setState({stageScale: newScale})
 	}
 
 	componentDidMount() {
@@ -79,8 +82,6 @@ class ImageViewer extends Component {
 					height={this.state.stageHeight}
 					draggable
 					onWheel={this.handleWheel}
-					// scaleX={this.state.stageScale}
-					// scaleY={this.state.stageScale}
 				>
 					<Layer>
 						<Image
