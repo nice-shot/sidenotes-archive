@@ -33,7 +33,7 @@ class ImageViewer extends Component {
 
 		let scaleBy = 1.3
 		// Zoom out if scroll was down
-		if (e.evt.deltaY < 0) {
+		if (e.evt.deltaY > 0) {
 			scaleBy = 1 / scaleBy
 		}
 
